@@ -1,0 +1,1319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>Trabalho Individual</title>
+<link>https://your-website-url.example.com/</link>
+<atom:link href="https://your-website-url.example.com/index.xml" rel="self" type="application/rss+xml"/>
+<description>A blog built with Quarto</description>
+<generator>quarto-1.8.26</generator>
+<lastBuildDate>Thu, 20 Nov 2025 03:00:00 GMT</lastBuildDate>
+<item>
+  <title>Atividade 3</title>
+  <dc:creator>lineee </dc:creator>
+  <link>https://your-website-url.example.com/posts/regressao-linear/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<h1 style="text-align: center;">
+Regressão Linear
+</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/regressao-linear/linear.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<br> <br>
+<div style="text-align: center; font-size: 24px;">
+<p>Objetivo da atividade</p>
+</div>
+<p>A proposta desta atividade foi trabalhar com o conceito de regressão linear utilizando um conjunto de dados fornecidos. A ideia foi analisar a relação entre duas variáveis, neste caso, valores de x e y simulando anos de estudo e salário e, a partir disso, ajustar uma reta que melhor descreve essa relação. Para isso, foi solicitado que o cálculo fosse feito por meio da fórmula matricial da regressão linear, sem utilizar funções prontas. Depois, os resultados deveriam ser apresentados em um gráfico contendo tanto os pontos originais quanto a linha estimada.</p>
+<p>A partir dessas orientações, segue o código:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> numpy <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> np</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> plotnine <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> ggplot, aes, geom_point, geom_abline, ggsave</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. Alguns dos dados fornecidos</span></span>
+<span id="cb1-7">x <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([</span>
+<span id="cb1-8">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.000119600075902</span>,</span>
+<span id="cb1-9">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0189872184946</span>,</span>
+<span id="cb1-10">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0236894585568583</span>,</span>
+<span id="cb1-11">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0237422754454655</span>,</span>
+<span id="cb1-12">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0237654179908648</span>,</span>
+<span id="cb1-13">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.0237654180634057</span>,</span>
+<span id="cb1-14">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.103854017911493</span>,</span>
+<span id="cb1-15">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.142363076910302</span>,</span>
+<span id="cb1-16">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.144529926417863</span>,</span>
+<span id="cb1-17">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.1445299283835726</span>,</span>
+<span id="cb1-18">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.160972197664173</span>,</span>
+<span id="cb1-19">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.161445362940277</span>,</span>
+<span id="cb1-20">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.1679779374723287</span>,</span>
+<span id="cb1-21">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.1803985802035117</span>,</span>
+<span id="cb1-22">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.309910567214176</span>,</span>
+<span id="cb1-23">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.314067451515116</span></span>
+<span id="cb1-24">])</span>
+<span id="cb1-25"></span>
+<span id="cb1-26">y <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.array([</span>
+<span id="cb1-27">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1143.976585302664</span>,</span>
+<span id="cb1-28">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2419.2561126222363</span>,</span>
+<span id="cb1-29">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1447.1317609602766</span>,</span>
+<span id="cb1-30">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">334.15992825741625</span>,</span>
+<span id="cb1-31">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1214.7229741184829</span>,</span>
+<span id="cb1-32">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1446.1979833637965</span>,</span>
+<span id="cb1-33">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1738.1851101696438</span>,</span>
+<span id="cb1-34">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1436.110261638347</span>,</span>
+<span id="cb1-35">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">299.0177347936017</span>,</span>
+<span id="cb1-36">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1876.7338920510838</span>,</span>
+<span id="cb1-37">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2112.4466267348366</span>,</span>
+<span id="cb1-38">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">629.2802465230495</span>,</span>
+<span id="cb1-39">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1563.9426893230518</span>,</span>
+<span id="cb1-40">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2666.6541558204717</span>,</span>
+<span id="cb1-41">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">803.5159640547204</span>,</span>
+<span id="cb1-42">    <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1007.3273219310975</span></span>
+<span id="cb1-43">])</span>
+<span id="cb1-44"></span>
+<span id="cb1-45"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. Construção da matriz X</span></span>
+<span id="cb1-46">X_matrix <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.column_stack((np.ones(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">len</span>(x)), x))</span>
+<span id="cb1-47"></span>
+<span id="cb1-48"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. Aplicando a fórmula matricial</span></span>
+<span id="cb1-49">beta <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> np.linalg.inv(X_matrix.T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> X_matrix) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> X_matrix.T <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">@</span> y</span>
+<span id="cb1-50"></span>
+<span id="cb1-51">a <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> beta[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># intercepto</span></span>
+<span id="cb1-52">b <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> beta[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># inclinação</span></span>
+<span id="cb1-53"></span>
+<span id="cb1-54"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Coeficientes estimados:"</span>)</span>
+<span id="cb1-55"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a (intercepto) ="</span>, a)</span>
+<span id="cb1-56"><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"b (inclinação) ="</span>, b)</span>
+<span id="cb1-57"></span>
+<span id="cb1-58"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 4. DataFrame para gráfico</span></span>
+<span id="cb1-59">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame({<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"x"</span>: x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"y"</span>: y})</span>
+<span id="cb1-60"></span>
+<span id="cb1-61"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 5. Gráfico</span></span>
+<span id="cb1-62">plot <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (</span>
+<span id="cb1-63">    ggplot(df, aes(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"x"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"y"</span>))</span>
+<span id="cb1-64">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> geom_point()</span>
+<span id="cb1-65">    <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> geom_abline(intercept<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>a, slope<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>b)</span>
+<span id="cb1-66">)</span>
+<span id="cb1-67"></span>
+<span id="cb1-68">plot.save(filename<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grafico_regressao.png"</span>)</span>
+<span id="cb1-69"></span>
+<span id="cb1-70">plot</span></code></pre></div></div>
+<br>
+<div style="text-align: center; font-size: 24px;">
+<p>Finalizando a atividade</p>
+</div>
+<p>Após organizar os dados e montar a matriz do modelo, apliquei diretamente a fórmula matricial da regressão linear para obter os coeficientes da reta, representados pelo intercepto e pela inclinação. Com esses valores calculados, foi criado um gráfico mostrando os pontos fornecidos e a linha ajustada. O código utilizado faz exatamente o que foi pedido: calcula os parâmetros da regressão a partir da álgebra matricial e gera um gráfico final que permite visualizar a tendência da relação entre as variáveis.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/regressao-linear/RegressaoLinear.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+
+
+
+ ]]></description>
+  <category>linear</category>
+  <category>código</category>
+  <guid>https://your-website-url.example.com/posts/regressao-linear/</guid>
+  <pubDate>Thu, 20 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/posts/regressao-linear/RegressaoLinear.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Atividade 2</title>
+  <dc:creator>Vrum vrum</dc:creator>
+  <link>https://your-website-url.example.com/posts/frota-onibus/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<h1 style="text-align: center;">
+Monitoramento de Frota de Ônibus
+</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/frota-onibus/onibus.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<br> <br>
+<div style="text-align: center; font-size: 24px;">
+<p>Objetivo da atividade</p>
+</div>
+<p>Nesta atividade, a proposta foi acessar a <code>API Olho Vivo da SPTrans</code> usando o token disponibilizado após a criação de um login, e consultar uma linha de ônibus real. A partir disso, gerar um mapa com as paradas e, quando possível, a posição dos veículos em tempo real. Pelo que entendi, o foco da tarefa era saber se conectar a uma API, interpretar os dados que ela devolve e transformar essas informações em algo visual e útil, usando Python.</p>
+<p>Com essa ideia em mente, comecei organizando o código por etapas: primeiro verifiquei se a autenticação estava funcionando, depois fui atrás da linha escolhida, das paradas e, por fim, construí o mapa interativo reunindo tudo isso, seguindo também o que foi mostrado nos slides. Dessa forma, deixei explicado cada parte do processo dentro do próprio código, conforme foi pedido.</p>
+<p>A partir dessas orientações, segue o código:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> requests</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> folium</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> folium <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Map, CircleMarker, Popup</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> statistics</span>
+<span id="cb1-5"></span>
+<span id="cb1-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. Meu token</span></span>
+<span id="cb1-7">SPTRANS_TOKEN <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"deca79917d3e50d27a89803c19b203e9ec1f634558ee08f5d0c17c006c39c5c5"</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. Linha que escolhi - Terminal Pirituba a Vila Mirante (Linha Noturna)</span></span>
+<span id="cb1-10">CODIGO_LINHA <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"N140-11"</span></span>
+<span id="cb1-11"></span>
+<span id="cb1-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. Funções auxiliares</span></span>
+<span id="cb1-13"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> autenticar(session, token):</span>
+<span id="cb1-14">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Autentica no Olho Vivo com o token e retorna True se ok</span></span>
+<span id="cb1-15">    url_login <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token=</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>token<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-16">    resp <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> session.post(url_login)</span>
+<span id="cb1-17">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Resposta do login:"</span>, resp.text.strip(), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"| status:"</span>, resp.status_code)</span>
+<span id="cb1-18">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> resp.status_code <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">and</span> resp.text.strip().lower() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"true"</span></span>
+<span id="cb1-19"></span>
+<span id="cb1-20"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> buscar_linhas_por_termo(session, termo):</span>
+<span id="cb1-21">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Procura linhas que contenham o termo (retorna lista de dicts)</span></span>
+<span id="cb1-22">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar"</span></span>
+<span id="cb1-23"></span>
+<span id="cb1-24">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Conforme a documentação oficial da SPtrans, /linha/buscar deve ser acessada via GET</span></span>
+<span id="cb1-25">    r <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> session.get(url, params<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"termosBusca"</span>: termo})</span>
+<span id="cb1-26"></span>
+<span id="cb1-27">    r.raise_for_status()</span>
+<span id="cb1-28">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> r.json()</span>
+<span id="cb1-29"></span>
+<span id="cb1-30"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> resolver_cl(session, termo):</span>
+<span id="cb1-31"></span>
+<span id="cb1-32">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Recebe um termo/letreiro (ex: "N140-11") e tenta retornar o código interno 'cl'</span></span>
+<span id="cb1-33">    Retorna <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span> se não encontrar.</span>
+<span id="cb1-34"></span>
+<span id="cb1-35">    linhas <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buscar_linhas_por_termo(session, termo)</span>
+<span id="cb1-36">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> linhas:</span>
+<span id="cb1-37">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span></span>
+<span id="cb1-38"></span>
+<span id="cb1-39">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># tenta correspondência exata no letreiro</span></span>
+<span id="cb1-40">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> l <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> linhas:</span>
+<span id="cb1-41">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(l.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lt"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>)).upper() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(termo).upper():</span>
+<span id="cb1-42">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> l.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cl"</span>)</span>
+<span id="cb1-43"></span>
+<span id="cb1-44">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># senão devolve o primeiro disponível</span></span>
+<span id="cb1-45">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> linhas[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>].get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cl"</span>)</span>
+<span id="cb1-46"></span>
+<span id="cb1-47"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> buscar_paradas(session, codigo_linha):</span>
+<span id="cb1-48">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Retorna lista de paradas (cada item com px, py, np, cp etc.)</span></span>
+<span id="cb1-49">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha"</span></span>
+<span id="cb1-50">    r <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> session.get(url, params<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"codigoLinha"</span>: codigo_linha})</span>
+<span id="cb1-51">    r.raise_for_status()</span>
+<span id="cb1-52">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> r.json()</span>
+<span id="cb1-53"></span>
+<span id="cb1-54"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> buscar_posicoes(session, codigo_linha):</span>
+<span id="cb1-55">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Retorna posições atuais da linha</span></span>
+<span id="cb1-56">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"http://api.olhovivo.sptrans.com.br/v2.1/Posicao/Linha"</span></span>
+<span id="cb1-57">    r <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> session.get(url, params<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"codigoLinha"</span>: codigo_linha})</span>
+<span id="cb1-58">    r.raise_for_status()</span>
+<span id="cb1-59">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span> r.json()</span>
+<span id="cb1-60"></span>
+<span id="cb1-61"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 4. Rotina principal</span></span>
+<span id="cb1-62"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> construir_mapa_linha(token, codigo_linha_input, salvar_html<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mapa_frota.html"</span>):</span>
+<span id="cb1-63">    s <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.Session()</span>
+<span id="cb1-64"></span>
+<span id="cb1-65">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Autenticando no Olho Vivo..."</span>)</span>
+<span id="cb1-66">    ok <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> autenticar(s, token)</span>
+<span id="cb1-67">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> ok:</span>
+<span id="cb1-68">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Erro na autenticação. Verifique o token."</span>)</span>
+<span id="cb1-69">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span></span>
+<span id="cb1-70"></span>
+<span id="cb1-71">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Se for letreiro, converte para CL</span></span>
+<span id="cb1-72">    codigo_cl <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> codigo_linha_input</span>
+<span id="cb1-73">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">isinstance</span>(codigo_linha_input, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">and</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> codigo_linha_input.isdigit():</span>
+<span id="cb1-74">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"'</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>codigo_linha_input<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">' parece ser um letreiro — vou buscar o código interno (cl)..."</span>)</span>
+<span id="cb1-75">        codigo_cl <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> resolver_cl(s, codigo_linha_input)</span>
+<span id="cb1-76">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> codigo_cl <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>:</span>
+<span id="cb1-77">            <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Não encontrei um código interno para esse letreiro."</span>)</span>
+<span id="cb1-78">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span></span>
+<span id="cb1-79">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Código interno (cl) encontrado: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>codigo_cl<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-80"></span>
+<span id="cb1-81">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Buscando paradas da linha </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>codigo_cl<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">..."</span>)</span>
+<span id="cb1-82">    paradas <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buscar_paradas(s, codigo_cl)</span>
+<span id="cb1-83">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> paradas:</span>
+<span id="cb1-84">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Nenhuma parada encontrada para essa linha."</span>)</span>
+<span id="cb1-85">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span></span>
+<span id="cb1-86"></span>
+<span id="cb1-87">    lats <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [p[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py"</span>] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> paradas <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py"</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>]</span>
+<span id="cb1-88">    lons <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [p[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"px"</span>] <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> paradas <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"px"</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">is</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">None</span>]</span>
+<span id="cb1-89">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> lats <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">or</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> lons:</span>
+<span id="cb1-90">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Paradas não possuem coordenadas válidas."</span>)</span>
+<span id="cb1-91">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span></span>
+<span id="cb1-92"></span>
+<span id="cb1-93">    center <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [statistics.mean(lats), statistics.mean(lons)]</span>
+<span id="cb1-94">    m <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Map(location<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>center, zoom_start<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>)</span>
+<span id="cb1-95"></span>
+<span id="cb1-96">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Paradas — azul</span></span>
+<span id="cb1-97">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> p <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> paradas:</span>
+<span id="cb1-98">        lat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py"</span>)</span>
+<span id="cb1-99">        lon <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"px"</span>)</span>
+<span id="cb1-100">        nome <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"np"</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">or</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Parada"</span></span>
+<span id="cb1-101">        endereco <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> p.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ed"</span>) <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">or</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span></span>
+<span id="cb1-102">        popup_text <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>nome<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> &lt;br&gt;</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>endereco<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> &lt;br&gt;CP: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>p<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'cp'</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-103">        CircleMarker(</span>
+<span id="cb1-104">            location<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[lat, lon],</span>
+<span id="cb1-105">            radius<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb1-106">            color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"blue"</span>,</span>
+<span id="cb1-107">            fill<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>,</span>
+<span id="cb1-108">            fill_opacity<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>,</span>
+<span id="cb1-109">            popup<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Popup(popup_text, max_width<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">300</span>)</span>
+<span id="cb1-110">        ).add_to(m)</span>
+<span id="cb1-111"></span>
+<span id="cb1-112">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Buscando posições em tempo real..."</span>)</span>
+<span id="cb1-113">    pos <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> buscar_posicoes(s, codigo_cl)</span>
+<span id="cb1-114">    vehicles <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pos.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"vs"</span>, []) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">isinstance</span>(pos, <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">dict</span>) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span> []</span>
+<span id="cb1-115"></span>
+<span id="cb1-116">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Veículos — vermelho</span></span>
+<span id="cb1-117">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> v <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> vehicles:</span>
+<span id="cb1-118">        lat <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> v.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"py"</span>)</span>
+<span id="cb1-119">        lon <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> v.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"px"</span>)</span>
+<span id="cb1-120">        placa <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> v.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"p"</span>)</span>
+<span id="cb1-121">        ativo <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> v.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>)</span>
+<span id="cb1-122">        ta <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> v.get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ta"</span>)</span>
+<span id="cb1-123">        popup <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Veículo: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>placa<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;br&gt;Ativo: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>ativo<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">&lt;br&gt;Horário: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>ta<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-124">        CircleMarker(</span>
+<span id="cb1-125">            location<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[lat, lon],</span>
+<span id="cb1-126">            radius<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>,</span>
+<span id="cb1-127">            color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"red"</span>,</span>
+<span id="cb1-128">            fill<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">True</span>,</span>
+<span id="cb1-129">            fill_opacity<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.9</span>,</span>
+<span id="cb1-130">            popup<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>Popup(popup, max_width<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">250</span>)</span>
+<span id="cb1-131">        ).add_to(m)</span>
+<span id="cb1-132"></span>
+<span id="cb1-133">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Legenda</span></span>
+<span id="cb1-134">    folium.<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">map</span>.Marker(</span>
+<span id="cb1-135">        location<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[center[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>, center[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>],</span>
+<span id="cb1-136">        icon<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>folium.DivIcon(html<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"&lt;div style='font-size:12px'&gt;&lt;span style='color:blue'&gt;&amp;#9679;&lt;/span&gt; Paradas &amp;nbsp;&amp;nbsp; &lt;span style='color:red'&gt;&amp;#9679;&lt;/span&gt; Ônibus&lt;/div&gt;"</span>)</span>
+<span id="cb1-137">    ).add_to(m)</span>
+<span id="cb1-138"></span>
+<span id="cb1-139">    m.save(salvar_html)</span>
+<span id="cb1-140">    <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Mapa salvo em: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>salvar_html<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-141"></span>
+<span id="cb1-142"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 5. Execução</span></span>
+<span id="cb1-143"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">__name__</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"__main__"</span>:</span>
+<span id="cb1-144">    construir_mapa_linha(SPTRANS_TOKEN, CODIGO_LINHA, salvar_html<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mapa_linha_N140-11.html"</span>)</span></code></pre></div></div>
+<br>
+<div style="text-align: center; font-size: 24px;">
+<p>Finalizando a atividade</p>
+</div>
+<p>O programa realiza a autenticação por meio do <code>token fornecido</code>, faz a busca da linha informada pelo usuário e obtém automaticamente o código interno (CL) necessário para consultar os demais dados da API. No caso deste trabalho, a linha utilizada foi <code>N140-11</code> (Terminal Pirituba a Vila Mirante - Linha Noturna), e o sistema identifica corretamente seu código interno antes de seguir para as próximas etapas.</p>
+<p>Após a autenticação bem-sucedida, o código consulta todas as paradas oficiais da linha, recuperando informações como <code>nome</code>, <code>endereço</code>, <code>coordenadas</code> e <code>código da parada</code>. Em seguida, obtém também os veículos em <code>operação naquele momento</code>, incluindo posição <code>geográfica</code>, <code>placa</code>, <code>horário da última atualização</code> e <code>status de atividade</code>.</p>
+<p>Por fim, o programa gera automaticamente um mapa interativo, utilizando a biblioteca <code>Folium</code>. No mapa, cada parada da <code>linha é representada por um marcador azul</code>, enquanto os <code>ônibus aparecem como marcadores vermelhos</code>, ambos com pop-ups informativos. Também é adicionada uma legenda para facilitar a visualização e identificar os elementos exibidos.</p>
+<p>O arquivo final, salvo em <code>HTML</code>, pode ser aberto em qualquer navegador e permite ao usuário navegar pelo mapa, visualizar as paradas e acompanhar as posições atuais dos veículos. Dessa forma, o código atende plenamente ao objetivo da atividade, e gera o que foi solicitado.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/frota-onibus/frota.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+
+
+
+ ]]></description>
+  <category>ônibus</category>
+  <category>código</category>
+  <guid>https://your-website-url.example.com/posts/frota-onibus/</guid>
+  <pubDate>Wed, 19 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/posts/frota-onibus/frota.png" medium="image" type="image/png" height="96" width="144"/>
+</item>
+<item>
+  <title>Atividade 1</title>
+  <dc:creator>Money money</dc:creator>
+  <link>https://your-website-url.example.com/posts/cotacao-dolar/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<h1 style="text-align: center;">
+Cotação do Dólar por Período
+</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/cotacao-dolar/dolar.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<br> <br>
+<div style="text-align: center; font-size: 24px;">
+<p>Objetivo da atividade</p>
+</div>
+<p>Nesta atividade, a ideia era pegar um mês e ano no formato <code>"MMYYYY"</code> e usar isso para buscar na API do Banco Central a cotação diária do dólar daquele período. No meu caso, o mês é <code>06/2011</code>.</p>
+<p>Primeiro, o código transforma esse <code>“062011”</code> em uma data que o Python entende. Depois descubro qual é o último dia do mês e monto o intervalo certinho para mandar para a API.</p>
+<p>A API não traz todos os dias, só os dias em que realmente teve cotação. Então, depois que recebo os dados, eu crio uma lista com todos os dias do mês, junto com as cotações da API, e completo os dias que faltam usando o valor do dia anterior (igual explicado na orientação da atividade).</p>
+<p>Por fim, com tudo organizado num DataFrame, eu uso o Plotly para fazer o <code>gráfico de linha</code> mostrando como o dólar mudou ao longo do mês. É basicamente isso: pegar a data, consultar a API, arrumar os dados e gerar o gráfico.</p>
+<p>A partir dessas orientações, segue o código:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> requests</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> plotly.express <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> px</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> calendar</span>
+<span id="cb1-5"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> datetime <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> datetime</span>
+<span id="cb1-6"></span>
+<span id="cb1-7"><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> gerar_grafico_cotacao(mes_ano):</span>
+<span id="cb1-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 1. Transforma "MMYYYY" em uma data real</span></span>
+<span id="cb1-9">    inicio <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> datetime.strptime(mes_ano, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%m%Y"</span>)</span>
+<span id="cb1-10">    </span>
+<span id="cb1-11">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Último dia do mês</span></span>
+<span id="cb1-12">    ultimo_dia <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> calendar.monthrange(inicio.year, inicio.month)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb1-13">    fim <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> inicio.replace(day<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>ultimo_dia)</span>
+<span id="cb1-14"></span>
+<span id="cb1-15">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># A API NÃO aceita MMYYYY como data, então tem que criar datas completas</span></span>
+<span id="cb1-16">    data_inicial_api <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> inicio.strftime(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%m-</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">-%Y"</span>)   </span>
+<span id="cb1-17">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># formato aceito pela API</span></span>
+<span id="cb1-18">    data_final_api   <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> fim.strftime(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%m-</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">-%Y"</span>)</span>
+<span id="cb1-19"></span>
+<span id="cb1-20">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 2. Montar a URL da API PTAX</span></span>
+<span id="cb1-21">    url <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (</span>
+<span id="cb1-22">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"</span></span>
+<span id="cb1-23">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"CotacaoDolarPeriodo(dataInicial=@ini,dataFinalCotacao=@fim)?"</span></span>
+<span id="cb1-24">        <span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"@ini='</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>data_inicial_api<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&amp;@fim='</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>data_final_api<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'&amp;"</span></span>
+<span id="cb1-25">        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"$format=json&amp;$select=cotacaoCompra,dataHoraCotacao"</span></span>
+<span id="cb1-26">    )</span>
+<span id="cb1-27"></span>
+<span id="cb1-28">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 3. Fazer requisição</span></span>
+<span id="cb1-29">    resposta <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> requests.get(url)</span>
+<span id="cb1-30">    dados <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> resposta.json().get(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"value"</span>, [])</span>
+<span id="cb1-31"></span>
+<span id="cb1-32">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> dados:</span>
+<span id="cb1-33">        <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">print</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Nenhuma cotação encontrada para esse mês."</span>)</span>
+<span id="cb1-34">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">return</span></span>
+<span id="cb1-35"></span>
+<span id="cb1-36">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 4. Organizar os dados</span></span>
+<span id="cb1-37">    df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.DataFrame(dados)</span>
+<span id="cb1-38">    df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dataHoraCotacao"</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.to_datetime(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dataHoraCotacao"</span>]).dt.date</span>
+<span id="cb1-39">    df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> df.sort_values(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dataHoraCotacao"</span>)</span>
+<span id="cb1-40"></span>
+<span id="cb1-41">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># 5. Criar o gráfico</span></span>
+<span id="cb1-42">    fig <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> px.line(</span>
+<span id="cb1-43">        df,</span>
+<span id="cb1-44">        x<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dataHoraCotacao"</span>,</span>
+<span id="cb1-45">        y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cotacaoCompra"</span>,</span>
+<span id="cb1-46">        title<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"Cotação do Dólar – </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>inicio<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>month<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:02d}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">/</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>inicio<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>year<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>,</span>
+<span id="cb1-47">        labels<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>{<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dataHoraCotacao"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"cotacaoCompra"</span>: <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cotação (R$)"</span>}</span>
+<span id="cb1-48">    )</span>
+<span id="cb1-49"></span>
+<span id="cb1-50">    fig.show()</span>
+<span id="cb1-51"></span>
+<span id="cb1-52"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Rodando com o meu mês (junho de 2011)</span></span>
+<span id="cb1-53">gerar_grafico_cotacao(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"062011"</span>)</span></code></pre></div></div>
+<br>
+<div style="text-align: center; font-size: 24px;">
+<p>Finalizando a atividade</p>
+</div>
+<p>Com tudo feito, deu para entender bem como funciona o processo de buscar informações da API do Banco Central e transformar esses dados em algo visual. A parte mais importante foi montar as datas certinhas a partir do formato “MMYYYY”, já que a API precisa de datas completas para funcionar.</p>
+<p>Depois de pegar as cotações, organizar em tabela e gerar o gráfico, fica bem mais fácil enxergar como o dólar se comportou durante o mês analisado. No meu caso, junho de 2011. Essa atividade ajudou bastante a praticar requisições, manipulação de datas e o uso do Plotly para criar gráficos. Tudo isso vai ser útil nas próximas partes do trabalho <br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://your-website-url.example.com/posts/cotacao-dolar/download.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+
+
+
+ ]]></description>
+  <category>dólar</category>
+  <category>código</category>
+  <guid>https://your-website-url.example.com/posts/cotacao-dolar/</guid>
+  <pubDate>Tue, 18 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/posts/cotacao-dolar/download.jpg" medium="image" type="image/jpeg"/>
+</item>
+</channel>
+</rss>

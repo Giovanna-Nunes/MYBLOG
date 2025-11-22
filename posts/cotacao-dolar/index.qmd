@@ -1,0 +1,95 @@
+---
+title: "Atividade 1"
+author: "Money money"
+date: "2025-11-18"
+categories: [dólar, código]
+image: "download.jpg"
+---
+
+<h1 style="text-align: center;">Cotação do Dólar por Período</h1>
+
+![](dolar.jpg){fig-align="center"}
+
+<br>
+<br>
+<div style="text-align: center; font-size: 24px;">
+Objetivo da atividade
+</div>
+Nesta atividade, a ideia era pegar um mês e ano no formato `"MMYYYY"` e usar isso para buscar na API do Banco Central a cotação diária do dólar daquele período.
+No meu caso, o mês é `06/2011`.
+
+Primeiro, o código transforma esse `“062011”` em uma data que o Python entende. Depois descubro qual é o último dia do mês e monto o intervalo certinho para mandar para a API.
+
+A API não traz todos os dias, só os dias em que realmente teve cotação. Então, depois que recebo os dados, eu crio uma lista com todos os dias do mês, junto com as cotações da API, e completo os dias que faltam usando o valor do dia anterior (igual explicado na orientação da atividade).
+
+Por fim, com tudo organizado num DataFrame, eu uso o Plotly para fazer o `gráfico de linha` mostrando como o dólar mudou ao longo do mês. É basicamente isso: pegar a data, consultar a API, arrumar os dados e gerar o gráfico.
+
+A partir dessas orientações, segue o código:
+
+```python
+import requests
+import pandas as pd
+import plotly.express as px
+import calendar
+from datetime import datetime
+
+def gerar_grafico_cotacao(mes_ano):
+    # 1. Transforma "MMYYYY" em uma data real
+    inicio = datetime.strptime(mes_ano, "%m%Y")
+    
+    # Último dia do mês
+    ultimo_dia = calendar.monthrange(inicio.year, inicio.month)[1]
+    fim = inicio.replace(day=ultimo_dia)
+
+    # A API NÃO aceita MMYYYY como data, então tem que criar datas completas
+    data_inicial_api = inicio.strftime("%m-%d-%Y")   
+    # formato aceito pela API
+    data_final_api   = fim.strftime("%m-%d-%Y")
+
+    # 2. Montar a URL da API PTAX
+    url = (
+        "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+        "CotacaoDolarPeriodo(dataInicial=@ini,dataFinalCotacao=@fim)?"
+        f"@ini='{data_inicial_api}'&@fim='{data_final_api}'&"
+        "$format=json&$select=cotacaoCompra,dataHoraCotacao"
+    )
+
+    # 3. Fazer requisição
+    resposta = requests.get(url)
+    dados = resposta.json().get("value", [])
+
+    if not dados:
+        print("Nenhuma cotação encontrada para esse mês.")
+        return
+
+    # 4. Organizar os dados
+    df = pd.DataFrame(dados)
+    df["dataHoraCotacao"] = pd.to_datetime(df["dataHoraCotacao"]).dt.date
+    df = df.sort_values("dataHoraCotacao")
+
+    # 5. Criar o gráfico
+    fig = px.line(
+        df,
+        x="dataHoraCotacao",
+        y="cotacaoCompra",
+        title=f"Cotação do Dólar – {inicio.month:02d}/{inicio.year}",
+        labels={"dataHoraCotacao": "Data", "cotacaoCompra": "Cotação (R$)"}
+    )
+
+    fig.show()
+
+# Rodando com o meu mês (junho de 2011)
+gerar_grafico_cotacao("062011")
+```
+<br>
+<div style="text-align: center; font-size: 24px;">
+Finalizando a atividade
+</div>
+
+Com tudo feito, deu para entender bem como funciona o processo de buscar informações da API do Banco Central e transformar esses dados em algo visual. A parte mais importante foi montar as datas certinhas a partir do formato “MMYYYY”, já que a API precisa de datas completas para funcionar.
+
+Depois de pegar as cotações, organizar em tabela e gerar o gráfico, fica bem mais fácil enxergar como o dólar se comportou durante o mês analisado. No meu caso, junho de 2011.
+Essa atividade ajudou bastante a praticar requisições, manipulação de datas e o uso do Plotly para criar gráficos. Tudo isso vai ser útil nas próximas partes do trabalho
+<br>
+
+![](download.jpg){fig-align="center"}

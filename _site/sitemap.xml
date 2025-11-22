@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://your-website-url.example.com/index.html</loc>
+    <lastmod>2025-11-22T19:03:35.791Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/posts/post-with-code/index.html</loc>
+    <lastmod>2025-11-20T22:02:43.817Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/about.html</loc>
+    <lastmod>2025-11-20T17:57:19.452Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/posts/welcome/index.html</loc>
+    <lastmod>2025-11-20T21:53:53.434Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/sobre.html</loc>
+    <lastmod>2025-11-20T18:37:36.038Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/posts/regressao-linear/index.html</loc>
+    <lastmod>2025-11-22T19:03:30.796Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/posts/frota-onibus/index.html</loc>
+    <lastmod>2025-11-22T14:02:33.324Z</lastmod>
+  </url>
+  <url>
+    <loc>https://your-website-url.example.com/posts/cotacao-dolar/index.html</loc>
+    <lastmod>2025-11-22T13:45:01.084Z</lastmod>
+  </url>
+</urlset>
