@@ -9,7 +9,7 @@ website:
     right:
       - sobre.qmd
       - icon: github
-        href: https://github.com/
+        href: https://github.com/Giovanna-Nunes/MYBLOG
 format:
   html:
     theme:
