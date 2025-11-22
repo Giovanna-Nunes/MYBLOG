@@ -1,25 +1,3 @@
----
-title: "Atividade 3"
-author: "lineee"
-date: "2025-11-20"
-categories: [linear, código]
-image: "RegressaoLinear.jpg"
----
-
-<h1 style="text-align: center;">Regressão Linear</h1>
-
-![](linear.png){fig-align="center"}
-
-<br>
-<br>
-<div style="text-align: center; font-size: 24px;">
-Objetivo da atividade
-</div>
-A proposta desta atividade foi trabalhar com o conceito de regressão linear utilizando um conjunto de dados fornecidos. A ideia foi analisar a relação entre duas variáveis, neste caso, valores de x e y simulando anos de estudo e salário e, a partir disso, ajustar uma reta que melhor descreve essa relação. Para isso, foi solicitado que o cálculo fosse feito por meio da fórmula matricial da regressão linear, sem utilizar funções prontas. Depois, os resultados deveriam ser apresentados em um gráfico contendo tanto os pontos originais quanto a linha estimada.
-
-A partir dessas orientações, segue o código:
-
-```python
 import numpy as np
 import pandas as pd
 from plotnine import ggplot, aes, geom_point, geom_abline
@@ -81,12 +59,3 @@ plot.save("grafico.png")
 # 6. Abre o gráfico automaticamente
 img = Image.open("grafico.png")
 img.show()
-```
-<br>
-<div style="text-align: center; font-size: 24px;">
-Finalizando a atividade
-</div>
-
-Após organizar os dados e montar a matriz do modelo, apliquei diretamente a fórmula matricial da regressão linear para obter os coeficientes da reta, representados pelo intercepto e pela inclinação. Com esses valores calculados, foi criado um gráfico mostrando os pontos fornecidos e a linha ajustada. O código utilizado faz exatamente o que foi pedido: calcula os parâmetros da regressão a partir da álgebra matricial e gera um gráfico final que permite visualizar a tendência da relação entre as variáveis.
-
-![](RegressaoLinear.jpg){fig-align="center"}
