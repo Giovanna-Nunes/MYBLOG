@@ -1,14 +1,11 @@
 import numpy as np
 import pandas as pd
 from plotnine import ggplot, aes, geom_point, geom_abline
-from PIL import Image
-from pathlib import Path # NOVO: Importa para lidar com caminhos
-
-# --- CORREÇÃO DO CARREGAMENTO DE DADOS (Mínimas Alterações) ---
+from PIL import Image 
+from pathlib import Path # Importa para lidar com caminhos
 
 # 1. Carregar os dados
-# Descobre o diretório do script e constrói o caminho absoluto para os arquivos.
-# Isso resolve o problema de o VS Code não saber qual é o diretório de trabalho (CWD).
+# Descobre o diretório do script e constrói o caminho para os arquivos x.txt e y.txt
 try:
     # Obtém o diretório do script
     diretorio_script = Path(__file__).resolve().parent
@@ -22,14 +19,11 @@ try:
     y = np.loadtxt(caminho_y)
     
 except NameError:
-    # Caso o script seja executado em um ambiente sem __file__ (raro em VS Code)
     # Usa a abordagem de caminho relativo como fallback, que é a original.
     X = np.loadtxt("x.txt")
     y = np.loadtxt("y.txt")
 
-# --- FIM DA CORREÇÃO ---
-
-# Garantir que X seja uma matriz coluna
+# Garante que X seja uma matriz coluna
 X = X.reshape(-1, 1)
 
 # 2. Adicionar coluna de 1s para o intercepto
